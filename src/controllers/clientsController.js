@@ -13,7 +13,6 @@ export async function postClients(request, response){
         if (queryClients.rowCount) {
             return response.sendStatus(409)
         }   
-        response.sendStatus(201);
 
         await connection.query(`
             INSERT INTO
@@ -28,4 +27,4 @@ export async function postClients(request, response){
         response.sendStatus(500);
     }
 
-}
+};

@@ -5,7 +5,7 @@ export default function clientsMiddleware(request, response, next) {
     const validation = clientsSchemas.validate(request.body, { abortEarly: true });
 
     if (validation.error) {
-        return response.sendStatus(422);
+        return response.sendStatus(400);
     }
 
     next();

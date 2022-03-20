@@ -27,5 +27,4 @@ export async function postCakes(request, response){
         console.error(error);
         response.sendStatus(500);
     }
-
 }

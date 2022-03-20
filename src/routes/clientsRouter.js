@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { postClients } from "../controllers/clientsController.js";
-import clientsMiddleware from "../middlewares/clientsMiddleware"
+import clientsMiddleware from "../middlewares/clientsMiddleware.js"
 
 const clientsRouter = Router();
 
-clientsRouter.post('/cakes',
-clientsMiddleware,
+clientsRouter.post('/clients',
+    clientsMiddleware,
     postClients
 );
 
