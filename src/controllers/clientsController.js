@@ -46,7 +46,7 @@ export async function getClientOrders(request, response){
 
         const clientOrders = await connection.query({
             text: `
-                SELECT o.id as "orderId", o.quantity, o."createdAt", o."totalPrice", cakes.name
+                SELECT o.id as "orderId", o.quantity, TO_CHAR(o."createdAt", 'YYYY-MM-DD HH24:MI'), o."totalPrice", cakes.name "cakeName"
                 FROM orders AS o
                 JOIN clients ON clients.id = o."clientId"
                 JOIN cakes ON cakes.id = o."cakeId"

@@ -14,7 +14,5 @@ export default function cakesMiddleware(request, response, next) {
         return response.status(400).send(validation.error.details[0].message);
     }
 
-   
-
     next();
 }
