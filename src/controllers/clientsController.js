@@ -1,4 +1,5 @@
 import connection from "../database.js"
+import { clientOrdersToObject } from "../utils/orderUtils.js";
 
 export async function postClients(request, response){
     const { name, address, phone } = request.body;
@@ -28,3 +29,37 @@ export async function postClients(request, response){
     }
 
 };
+
+export async function getClientOrders(request, response){
+    const clientId = request.params.id;
+
+    try {
+        const clients = await connection.query(`
+            SELECT * 
+            FROM clients
+            WHERE id = $1
+        `, [clientId]);
+
+        if (!clients.rowCount) {
+            return response.sendStatus(404);
+        }
+
+        const clientOrders = await connection.query({
+            text: `
+                SELECT o.id as "orderId", o.quantity, o."createdAt", o."totalPrice", cakes.name
+                FROM orders AS o
+                JOIN clients ON clients.id = o."clientId"
+                JOIN cakes ON cakes.id = o."cakeId"
+                WHERE clients.id = $1;
+            `, values: [clientId], rowMode: "array",
+
+        });
+
+        const formattedQuery = clientOrders.rows.map(clientOrdersToObject);
+
+        return response.status(200).send(formattedQuery);
+        
+    } catch (error) {
+        console.error(error)
+    }
+}

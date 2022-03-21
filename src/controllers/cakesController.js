@@ -9,7 +9,6 @@ export async function postCakes(request, response){
             FROM cakes
             WHERE name = $1   
         `, [name]);
-
         
         if (queryCakes.rowCount) {
             return response.sendStatus(409);
