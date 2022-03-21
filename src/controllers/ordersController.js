@@ -31,7 +31,7 @@ export async function postOrders(request, response) {
             VALUES ($1, $2, $3, $4)
         `, [clientId, cakeId, quantity, totalPrice]);
 
-        response.sendStatus(201);
+        response.sendStatus(200);
 
     } catch (error) {
         console.error(error);
@@ -52,7 +52,7 @@ export async function getOrders(request, response) {
             rowMode: "array"
         });
 
-        if (!allOrders.rowCount){
+        if (!allOrders.rowCount) {
             return response.status(404).send([]);
         }
 
@@ -76,15 +76,16 @@ export async function getOrderById(request, response) {
     try {
         const order = await connection.query({
             text: `
-                SELECT clients.id AS "clientId", clients.name AS "clientName", clients.address, clients.phone, cakes.id AS "cakeId", cakes.name AS "cakeName", cakes.price, cakes.description, cakes.image, o."createdAt", o.quantity, o."totalPrice"
-                FROM orders AS o
-                JOIN clients ON clients.id = o."clientId"
-                JOIN cakes ON cakes.id = o."cakeId"
-                WHERE o.id = $1;
+                SELECT clients.*, cakes.*, orders.*
+                FROM 
+                    orders 
+                    JOIN clients ON clients.id = "clientId"
+                    JOIN cakes ON cakes.id = "cakeId"
+                WHERE orders.id = $1;
             `, values: [orderId], rowMode: "array"
         });
-
-        if (!order) {
+console.log(order.rows);
+        if (!order.rowCount) {
             return response.sendStatus(404)
         }
 
@@ -93,6 +94,7 @@ export async function getOrderById(request, response) {
         return response.status(200).send(formattedQuery);
 
     } catch (error) {
+        console.error(error);
         return response.sendStatus(500);
     }
 };
