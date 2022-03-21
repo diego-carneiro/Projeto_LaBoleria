@@ -41,8 +41,6 @@ export async function postOrders(request, response) {
 export async function getOrders(request, response) {
     const queryDate = request.query.date;
 
-    console.log(queryDate);
-
     if (queryDate) {
         const dateOrders = await connection.query({
             text: `
